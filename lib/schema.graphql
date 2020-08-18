@@ -12,3 +12,15 @@ type Query {
     "Retrieve a course"
     getCourse(id: ID!): Course
 }
+
+input CourseInput {
+  name: String!
+  teacher: String
+  description: String!
+  year: String
+}
+
+type Mutation {
+  "Create a course"
+  createCourse(input: CourseInput!): Course
+}
