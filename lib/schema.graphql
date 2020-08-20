@@ -4,13 +4,24 @@ type Course {
   teacher: String
   description: String!
   year: String
+  people: [Student]
+}
+
+type Student {
+  _id: ID!
+  name: String!
+  email: String
 }
 
 type Query {
-    "Retrieve all courses"
-    getCourses: [Course]
-    "Retrieve a course"
-    getCourse(id: ID!): Course
+  "Retrieve all courses"
+  getCourses: [Course]
+  "Retrieve a course"
+  getCourse(id: ID!): Course
+}
+
+type CourseID {
+  _id: ID!
 }
 
 input CourseInput {
@@ -20,7 +31,18 @@ input CourseInput {
   year: String
 }
 
+input CourseEditInput {
+  name: String
+  teacher: String
+  description: String
+  year: String
+}
+
 type Mutation {
   "Create a course"
   createCourse(input: CourseInput!): Course
+  "Edit a course"
+  editCourse(_id: ID!, input: CourseEditInput!): Course
+  "Delete a course"
+  deleteCourse(_id: ID!): CourseID
 }
