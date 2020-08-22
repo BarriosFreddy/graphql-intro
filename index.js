@@ -1,4 +1,5 @@
 const app = require("express")();
+const cors = require("cors");
 require("dotenv").config();
 const { graphqlHTTP } = require("express-graphql");
 const { makeExecutableSchema } = require("graphql-tools");
@@ -7,7 +8,8 @@ const { join } = require("path");
 const resolvers = require("./lib/resolvers");
 const mongodbSvc = require("./lib/mongodbSvc");
 
-const PORT = process.env.PORT || 3000;
+const { PORT, NODE_ENV } = process.env;
+const isDev = NODE_ENV === 'dev'
 
 mongodbSvc.connect();
 
@@ -17,16 +19,18 @@ const typeDefs = readFileSync(
 );
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+app.use(cors());
+
 app.use(
   "/api",
   graphqlHTTP({
     schema: schema,
     rootValue: resolvers,
-    graphiql: true,
+    graphiql: isDev,
   })
 );
 
-app.listen(PORT, () => {
+app.listen(PORT || 3000, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
 
